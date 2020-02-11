@@ -2,11 +2,12 @@
 #include <iostream>
 #include "SDL.h"
 
-Game::Game(std::size_t grid_width, std::size_t grid_height)
-    : snake(grid_width, grid_height),
+Game::Game(std::size_t grid_width, std::size_t grid_height, bool blob_active)
+    : snake(grid_width, grid_height), blob(grid_width, grid_height, dev, blob_active),
       engine(dev()),
-      random_w(0, static_cast<int>(grid_width)),
-      random_h(0, static_cast<int>(grid_height)) {
+      // Corrected bug where food is occasionally places outside of the game board
+      random_w(0, static_cast<int>(grid_width)-1),
+      random_h(0, static_cast<int>(grid_height)-1) {
   PlaceFood();
 }
 
@@ -25,7 +26,7 @@ void Game::Run(Controller const &controller, Renderer &renderer,
     // Input, Update, Render - the main game loop.
     controller.HandleInput(running, snake);
     Update();
-    renderer.Render(snake, food);
+    renderer.Render(snake, blob, food);
 
     frame_end = SDL_GetTicks();
 
@@ -57,7 +58,7 @@ void Game::PlaceFood() {
     y = random_h(engine);
     // Check that the location is not occupied by a snake item before placing
     // food.
-    if (!snake.SnakeCell(x, y)) {
+    if (!snake.CharacterCell(x, y)) {
       food.x = x;
       food.y = y;
       return;
@@ -68,7 +69,24 @@ void Game::PlaceFood() {
 void Game::Update() {
   if (!snake.alive) return;
 
-  snake.Update();
+  // In case of more than two characters a vector can be used to store the promises and futures, but with only
+  // two characters, the snake and the blob, it is probably more efficient to use separate variables as follows.
+  // FP.6. A promise and a future are used in the project.
+  std::promise<bool> prms_snake;
+  std::future<bool> ftr_snake = prms_snake.get_future();
+  std::promise<bool> prms_blob;
+  std::future<bool> ftr_blob = prms_blob.get_future();
+
+  // FP.5. The project uses multithreading.
+  std::thread t_snake(&Snake::Update, &snake, std::move(prms_snake));
+  std::thread t_blob(&Blob::Update, &blob, std::move(prms_blob));
+
+  // FP.6. A promise and a future are used in the project.
+  ftr_snake.wait();
+  ftr_blob.wait();
+
+  t_snake.join();
+  t_blob.join();
 
   int new_x = static_cast<int>(snake.head_x);
   int new_y = static_cast<int>(snake.head_y);
@@ -81,7 +99,13 @@ void Game::Update() {
     snake.GrowBody();
     snake.speed += 0.02;
   }
+
+  // Check if snake's head is in the blob
+  if (blob.active and blob.CharacterCell(snake.head_x, snake.head_y)) {
+      // Decrease the score by 0.01
+      score-=0.01;
+  }
 }
 
-int Game::GetScore() const { return score; }
+float Game::GetScore() const { return score; }
 int Game::GetSize() const { return snake.size; }

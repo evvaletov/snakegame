@@ -4,24 +4,30 @@
 #include <vector>
 #include "SDL.h"
 #include "snake.h"
+#include "blob.h"
 
 class Renderer {
- public:
-  Renderer(const std::size_t screen_width, const std::size_t screen_height,
-           const std::size_t grid_width, const std::size_t grid_height);
-  ~Renderer();
+public:
+    Renderer(const std::size_t screen_width, const std::size_t screen_height,
+             const std::size_t grid_width, const std::size_t grid_height);
 
-  void Render(Snake const snake, SDL_Point const &food);
-  void UpdateWindowTitle(int score, int fps);
+    ~Renderer();
 
- private:
-  SDL_Window *sdl_window;
-  SDL_Renderer *sdl_renderer;
+    void Render(Snake const snake, Blob const blob, SDL_Point const &food);
 
-  const std::size_t screen_width;
-  const std::size_t screen_height;
-  const std::size_t grid_width;
-  const std::size_t grid_height;
+    void UpdateWindowTitle(float score, int fps);
+
+private:
+    SDL_Window *sdl_window;
+    SDL_Renderer *sdl_renderer;
+
+    const std::size_t screen_width;
+    const std::size_t screen_height;
+    const std::size_t grid_width;
+    const std::size_t grid_height;
+
+    template<typename T>
+    std::string to_string_with_precision(const T a_value, const int n);
 };
 
 #endif

@@ -1,0 +1,51 @@
+Determining if the pthread_create exist failed with the following output:
+Change Dir: /home/evvaletov/C++/capstone/CppND-Capstone-Snake-Game/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/gmake" "cmTC_95473/fast"
+/usr/bin/gmake -f CMakeFiles/cmTC_95473.dir/build.make CMakeFiles/cmTC_95473.dir/build
+gmake[1]: Entering directory '/home/evvaletov/C++/capstone/CppND-Capstone-Snake-Game/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_95473.dir/CheckSymbolExists.c.o
+/usr/bin/cc    -o CMakeFiles/cmTC_95473.dir/CheckSymbolExists.c.o   -c /home/evvaletov/C++/capstone/CppND-Capstone-Snake-Game/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c
+Linking C executable cmTC_95473
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_95473.dir/link.txt --verbose=1
+/usr/bin/cc      CMakeFiles/cmTC_95473.dir/CheckSymbolExists.c.o  -o cmTC_95473 
+/usr/bin/ld: CMakeFiles/cmTC_95473.dir/CheckSymbolExists.c.o: in function `main':
+CheckSymbolExists.c:(.text+0x1f): undefined reference to `pthread_create'
+collect2: error: ld returned 1 exit status
+gmake[1]: *** [CMakeFiles/cmTC_95473.dir/build.make:87: cmTC_95473] Error 1
+gmake[1]: Leaving directory '/home/evvaletov/C++/capstone/CppND-Capstone-Snake-Game/build/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:121: cmTC_95473/fast] Error 2
+
+File /home/evvaletov/C++/capstone/CppND-Capstone-Snake-Game/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c:
+/* */
+#include <pthread.h>
+
+int main(int argc, char** argv)
+{
+  (void)argv;
+#ifndef pthread_create
+  return ((int*)(&pthread_create))[argc];
+#else
+  (void)argc;
+  return 0;
+#endif
+}
+
+Determining if the function pthread_create exists in the pthreads failed with the following output:
+Change Dir: /home/evvaletov/C++/capstone/CppND-Capstone-Snake-Game/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/gmake" "cmTC_dc019/fast"
+/usr/bin/gmake -f CMakeFiles/cmTC_dc019.dir/build.make CMakeFiles/cmTC_dc019.dir/build
+gmake[1]: Entering directory '/home/evvaletov/C++/capstone/CppND-Capstone-Snake-Game/build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_dc019.dir/CheckFunctionExists.c.o
+/usr/bin/cc   -DCHECK_FUNCTION_EXISTS=pthread_create   -o CMakeFiles/cmTC_dc019.dir/CheckFunctionExists.c.o   -c /usr/share/cmake-3.13/Modules/CheckFunctionExists.c
+Linking C executable cmTC_dc019
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_dc019.dir/link.txt --verbose=1
+/usr/bin/cc  -DCHECK_FUNCTION_EXISTS=pthread_create    CMakeFiles/cmTC_dc019.dir/CheckFunctionExists.c.o  -o cmTC_dc019 -lpthreads 
+/usr/bin/ld: cannot find -lpthreads
+collect2: error: ld returned 1 exit status
+gmake[1]: *** [CMakeFiles/cmTC_dc019.dir/build.make:87: cmTC_dc019] Error 1
+gmake[1]: Leaving directory '/home/evvaletov/C++/capstone/CppND-Capstone-Snake-Game/build/CMakeFiles/CMakeTmp'
+gmake: *** [Makefile:121: cmTC_dc019/fast] Error 2
+
+

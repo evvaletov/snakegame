@@ -3,38 +3,43 @@
 
 #include <vector>
 #include "SDL.h"
+#include "character.h"
 
-class Snake {
- public:
-  enum class Direction { kUp, kDown, kLeft, kRight };
+// FP.2. Classes follow and appropriate inheritance hierarchy.
+class Snake : public Character {
+public:
+    // enum class Direction { kUp, kDown, kLeft, kRight };
 
-  Snake(int grid_width, int grid_height)
-      : grid_width(grid_width),
-        grid_height(grid_height),
-        head_x(grid_width / 2),
-        head_y(grid_height / 2) {}
+    Snake(int grid_width, int grid_height) :
+            Character(grid_width, grid_height, grid_width / 2, grid_height / 2) {}
 
-  void Update();
+    // FP.3. Derived class functions override virtual base class functions.
+    void Update(std::promise<bool> &&prms) override;
 
-  void GrowBody();
-  bool SnakeCell(int x, int y);
+    void GrowBody();
 
-  Direction direction = Direction::kUp;
+    // FP.3. Derived class functions override virtual base class functions.
+    [[nodiscard]] bool CharacterCell(int x, int y) const override;
 
-  float speed{0.1f};
-  int size{1};
-  bool alive{true};
-  float head_x;
-  float head_y;
-  std::vector<SDL_Point> body;
+    // Direction direction = Direction::kUp;
 
- private:
-  void UpdateHead();
-  void UpdateBody(SDL_Point &current_cell, SDL_Point &prev_cell);
+    // float speed{0.1f};
+    // int size{1};
+    // bool alive{true};
+    // float head_x;
+    // float head_y;
+    // std::vector<SDL_Point> body;
 
-  bool growing{false};
-  int grid_width;
-  int grid_height;
+private:
+    // FP.3. Derived class functions override virtual base class functions.
+    void UpdateHead() override;
+
+    // FP.3. Derived class functions override virtual base class functions.
+    void UpdateBody(SDL_Point &current_cell, SDL_Point &prev_cell) override;
+
+    bool growing{false};
+    // int grid_width;
+    // int grid_height;
 };
 
 #endif
